@@ -1,0 +1,5 @@
+idcfcloud:
+  environment:
+    - IDCF_COMPUTE_ENDPOINT=
+    - IDCF_COMPUTE_API_KEY=
+    - IDCF_COMPUTE_SECRET_KEY=

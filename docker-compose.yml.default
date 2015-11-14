@@ -1,0 +1,12 @@
+idcfcloud:
+  build: .
+  volumes:
+    - .:/app
+    - /etc/localtime:/etc/localtime:ro
+  ports:
+    - "3000:3000"
+  environment:
+    - IDCF_SLEEP_TIME=10000
+    - IDCF_KEYPAIR=
+    - MASTER_NAME=salt
+    - EXPRESS_PORT=3000

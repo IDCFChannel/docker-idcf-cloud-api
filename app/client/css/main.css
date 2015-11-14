@@ -1,0 +1,11 @@
+#log {
+    height: 350px;
+    overflow: auto;
+    word-wrap: break-word;
+}
+
+.top-buffer { margin-top:20px; }
+
+.btn-margin-right {
+    margin-right: 8px;
+}
