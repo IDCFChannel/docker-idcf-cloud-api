@@ -1,6 +1,6 @@
 docker-compose.yml
 docker-compose.cli.yml
-data
+data/vms.json
 .git
 .gitignore
 nginx/conf/certs
