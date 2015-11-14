@@ -96,6 +96,6 @@ module.exports = co.wrap(function* (command, name, keypair, privateKey,
                            })
     );
 
-    yield appendFile(config.vms, JSON.stringify(vmInfo));
+    //yield appendFile(config.vms, JSON.stringify(vmInfo));
     return vmInfo;
 });
