@@ -1,4 +1,5 @@
 idcfcloud:
+  restart: always
   build: .
   volumes:
     - .:/app
@@ -10,3 +11,15 @@ idcfcloud:
     - IDCF_KEYPAIR=
     - MASTER_NAME=salt
     - EXPRESS_PORT=3000
+openresty:
+  restart: always
+  image: tenstartups/openresty
+  ports:
+    - "80:80"
+    - "443:443"
+  volumes:
+    - ./nginx/conf:/etc/nginx
+    - /etc/localtime:/etc/localtime:ro
+  links:
+    - idcfcloud
+  command: ["nginx", "-c", "/etc/nginx/nginx.conf"]

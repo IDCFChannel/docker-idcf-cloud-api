@@ -3,3 +3,4 @@ docker-compose.cli.yml
 data
 .git
 .gitignore
+nginx/conf/certs

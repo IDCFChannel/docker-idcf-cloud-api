@@ -3,6 +3,7 @@ docker-compose.yml
 docker-compose.cli.yml
 dist/js
 data
+nginx/conf/certs
 
 ### Linux ###
 *~
