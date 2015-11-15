@@ -65,7 +65,7 @@ program
                   console.log('Elapsed Time: ' + (Date.now() - start)/1000.0 + ' seconds');
               })
               .catch((err) => {
-                  console.log(err.stack);
+                  console.log(err.stack || err.message);
                   command.exec('deleteSSHKeyPair', { name: keypair })
                       .then((success) => {
                           console.log('delete keypair '+keypair+' : '+success);
@@ -92,7 +92,7 @@ program
               console.log('Elapsed Time: ' + (Date.now() - start)/1000.0 + ' seconds');
           })
           .catch((err) => {
-              console.log(err.stack);
+              console.log(err.stack || err.message);
           });
       }
   });

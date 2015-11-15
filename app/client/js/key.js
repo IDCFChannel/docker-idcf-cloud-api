@@ -22,7 +22,7 @@ const KeyPage = {
                                 m('label', { class: 'control-label',
                                              type: 'text',
                                              for: 'endpoint' } ,
-                                  ctrl.vm.keyValidator.hasError('endpoint') ? ctrl.vm.keyValidator.hasError('endpoint') : 'ENDPOINT'),
+                                  ctrl.vm.keyValidator.hasError('endpoint') ? ctrl.vm.keyValidator.hasError('endpoint') : 'ENDPOINT (東日本リージョン)'),
 
                                 m('input', { type: 'text',
                                              id: 'endpoint',
