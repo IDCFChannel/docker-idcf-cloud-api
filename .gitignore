@@ -2,6 +2,7 @@
 docker-compose.yml
 docker-compose.cli.yml
 dist/js
+dist/waltiab*
 data/vms.json
 nginx/conf/certs
 
