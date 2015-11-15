@@ -41,8 +41,8 @@
         "gulp-eslint": "~1.0.0"
     },
     "scripts": {
-        "start":  "gulp webpack && NODE_ENV=production node ./app/server/server",
-        "cli":   "node ./app/cli/index.js",
+        "start":   "gulp webpack && NODE_ENV=production node ./app/server/server",
+        "cli":     "node ./app/cli/index.js",
         "nodemon": "gulp nodemon",
         "watch":   "gulp watch",
         "build":   "gulp webpack"
