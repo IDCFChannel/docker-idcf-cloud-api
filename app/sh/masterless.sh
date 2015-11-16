@@ -25,6 +25,6 @@ EOF
 
 curl -L https://bootstrap.saltstack.com | sh -s -- -P
 echo 'now installing IDCF Channel Server.'
-echo 'please wait a few minutes.'
+echo 'please wait approximately 5-10 minutes.'
 
 salt-call --local state.highstate

@@ -21,10 +21,13 @@ module.exports = co.wrap(function* (command, name, keypair, privateKey,
                             { name: offeringName });
     let offeringid = offering[0].id;
 
+    let networks = yield command.exec('listNetworks', { type: 'Isolated' });
+    let networkids = networks.map((network) => network.id).join(',');
     let deployInfo = yield {
         name: name,
         zoneid: zoneid,
         serviceofferingid: offeringid,
+        networkids: networkids,
         templateid: command.exec('listTemplates',
                                  { zoneid: zoneid,
                                    templatefilter: config.templatefilter,

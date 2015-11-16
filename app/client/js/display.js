@@ -20,7 +20,7 @@ const DisplayPage = {
                                              'デバイス一覧が表示されない場合は仮想マシンにSSH接続をしてregisterコマンドでデバイスを登録してください。',
                                              m('a', { href: 'https://github.com/IDCFChannel/meshblu-compose'}, 'https://github.com/IDCFChannel/meshblu-compose')],
                                   mode: 'info',
-                                  title: '情報' }),
+                                  title: '注意事項' }),
                     m('h3', 'Log'),
                     m('pre#log'),
                     m('.panel.panel-success', [

@@ -23,6 +23,7 @@ const config = {
     apiKey: process.env.IDCF_COMPUTE_API_KEY,
     secretKey: process.env.IDCF_COMPUTE_SECRET_KEY,
     zone: 'henry',
+    /*zone: 'augusta',*/
     offering: 'light.S2',
     template: 'Debian 8.2.0 64-bit',
     templatefilter: 'featured',

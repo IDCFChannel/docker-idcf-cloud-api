@@ -13,8 +13,7 @@ export default class Vm {
         }
         this.error = m.prop(null);
 
-        //this.endpoint = m.prop(null);
-        this.endpoint = m.prop('https://compute.jp-east.idcfcloud.com/client/api');
+        this.endpoint = m.prop(null);
         this.apiKey = m.prop(null);
         this.secretKey = m.prop(null);
 

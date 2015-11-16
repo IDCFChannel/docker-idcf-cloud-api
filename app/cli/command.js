@@ -53,6 +53,12 @@ function Command (client, sleepTime) {
         listTemplates: (response) => {
             return response.template[0].id;
         },
+        listNetworks: (response) => {
+            return response.network;
+        },
+        listNetworkOfferings: (response) => {
+            return response;
+        },
         listVirtualMachines: (response) => {
             return response.virtualmachine;
         },
