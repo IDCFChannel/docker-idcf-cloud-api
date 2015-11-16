@@ -14,7 +14,7 @@ const KeyPage = {
                         m('.panel-heading', 'API情報'),
                         m('.panel-body', [
                             ctrl.vm.error() ? m.component(Alert,
-                                                          { message: ctrl.vm.error().error,
+                                                          { messages: [ctrl.vm.error().error],
                                                             mode: 'danger',
                                                             title: 'エラー' }) : '',
                             m('div', { class: 'form-group'+(ctrl.vm.keyValidator.hasError('apiKey') ? ' has-error has-feedback' : '') }, [
