@@ -115,11 +115,12 @@ io.on('connection', (socket) => {
                         socket.emit(newdata, data.toString('utf8'));
                     });
                     myProcess.stderr.on('data', (data) => {
-                        socket.emit(newdata, data);
+                        console.log('err: '+data.toString('utf8'));
+                        socket.emit(newdata, data.toString('utf8'));
                     });
                     myProcess.on('close', (code) => {
                         if (code == 0)  resolve(vmInfo);
-                        else  reject({command: command});
+                        else  reject({ code: code, name:name });
                     });
                 });
             })

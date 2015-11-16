@@ -5,15 +5,16 @@ const common = require('./common');
 module.exports = co.wrap(function* (command, config) {
     let zone = yield command.exec('listZones',
                                     { name: config.zone });
-//    let zoneid = zone[0].id;
-//    console.log('zoneid: ', zoneid);
-//    let vms = yield command.exec('listVirtualMachines');
-//    console.log(vms.map(common.pluckDispVm));
+    let zoneid = zone[0].id;
+    let vms = yield command.exec('listVirtualMachines');
+    console.log(vms.map(common.pluckDispVm));
 
+/*
     let networks = yield command.exec('listNetworks', { type: 'Isolated' });
+    console.log(networks);
     let front = networks.filter((network) => network.type === 'Isolated');
     console.log(networks.map((network) => network.id));
-
+*/
 //    let networkOfferings = yield command.exec('listNetworkOfferings');
 //    console.log(networkOfferings);
 /*
