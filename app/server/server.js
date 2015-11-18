@@ -66,7 +66,11 @@ app.get('/zones', (req, res) => {
                });
     })
     .catch((err) => {
-        console.log('/zones: '+err.stack);
+        if (err.stack) {
+            console.log('/zones: '+err.stack);
+        } else {
+            console.log('/zones: '+err);
+        }
         res.status(500).send({ error: 'API情報が正しくありません。' });
     });
 
@@ -85,7 +89,11 @@ app.get('/offerings', (req, res) => {
         res.json(retval);
     })
     .catch((err) => {
-        console.log('/offerings: '+err.stack);
+        if (err.stack) {
+            console.log('/offerings: '+err.stack);
+        } else {
+            console.log('/offerings: '+err);
+        }
         res.status(500).send({ error: 'API情報が正しくありません。' });
     });
 });

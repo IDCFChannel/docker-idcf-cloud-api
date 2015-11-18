@@ -45,6 +45,7 @@ export default class Vm {
     }
 
     prepare() {
+        this.error = m.prop(null);
         this.keyValidator.validate(this);
 
         if (this.keyValidator.hasErrors()){
@@ -74,6 +75,7 @@ export default class Vm {
     }
 
     deploy() {
+        this.error = m.prop(null);
         this.prepareValidator.validate(this);
 
         if (this.prepareValidator.hasErrors()){

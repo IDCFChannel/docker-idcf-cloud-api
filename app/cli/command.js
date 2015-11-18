@@ -1,9 +1,13 @@
 'use strict';
 
 function CommandException(err, respKey) {
-   this.err = err;
-   this.message = err.response.body[respKey].errortext;
-   this.toString = () => { return this.message };
+    this.err = err;
+    if (err.response.body) {
+        this.message = err.response.body[respKey].errortext;
+    } else {
+        this.message = err.response;
+    }
+    this.toString = () => { return this.message };
 }
 
 function buildResponseKey(name) {
