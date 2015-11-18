@@ -31,9 +31,9 @@ const idcf = require('idcf-cloud-api');
 
 function buildCommand(endpoint, apiKey, secretKey) {
     let client = idcf({
-        endpoint: endpoint,
-        apiKey: apiKey,
-        secretKey: secretKey
+        endpoint: endpoint.trim(),
+        apiKey: apiKey.trim(),
+        secretKey: secretKey.trim()
     });
     let command = require('../cli/command')(client, config.sleepTime);
     return command;
@@ -78,6 +78,7 @@ app.get('/zones', (req, res) => {
 
 app.get('/offerings', (req, res) => {
     let command = buildCommand(req.query.endpoint, req.query.apiKey, req.query.secretKey);
+
     command.exec('listServiceOfferings')
     .then((offerings) => {
         let retval = offerings.filter((offering) =>
