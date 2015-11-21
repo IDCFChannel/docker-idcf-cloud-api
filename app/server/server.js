@@ -135,10 +135,14 @@ function tplStart(name, start) {
 
 function tplMail(vmInfo, devices) {
     let dump = {
-        message: 'IDCFチャンネルのデバイス情報',
-        publicip: vmInfo.publicip,
+        server: {
+            hostname: vmInfo.name,
+            publicip: vmInfo.publicip
+        },
         devices: devices
     }
+
+    let retval = '# IDCFチャンネルのデバイス情報\n\n';
     return yaml.safeDump(dump);
 }
 
