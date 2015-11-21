@@ -1,11 +1,6 @@
 #!/bin/bash
 set -o nounset
 
-#until [ `nmap --open -p 22 $2 |grep -c "ssh"` -eq 1 ]
-#do
-#  sleep 5
-#done
-
 SSH_OPTS="-o UserKnownHostsFile=/dev/null -o CheckHostIP=no -o StrictHostKeyChecking=no"
 SSH_KEY="$3"
 
@@ -22,6 +17,5 @@ do
   fi
 done
 
-echo 'start salt-minion install.'
 scp $SSH_OPTS -i $SSH_KEY $SSH_KEY root@$2:.ssh/
 ssh $SSH_OPTS -i $SSH_KEY root@$2 'bash -s' < `dirname $0`/$1 $2 $4

@@ -16,9 +16,7 @@ const DisplayPage = {
                 m('.col-md-10.col-md-offset-1', [
                     m.component(Alert,
                                 { messages: ['完了までに10分ほどかかる場合があります。画面を閉じずにお待ちください。',
-                                             'ログの最後にデバイスのuuidとtokenの一覧が表示されます。',
-                                             'デバイス一覧が表示されない場合は仮想マシンにSSH接続をしてregisterコマンドでデバイスを登録してください。',
-                                             m('a', { href: 'https://github.com/IDCFChannel/meshblu-compose'}, 'https://github.com/IDCFChannel/meshblu-compose')],
+                                             '仮想マシンのSSH情報とデバイスの情報は'+ ctrl.vm.email() +' 宛に送信されます。'],
                                   mode: 'info',
                                   title: '注意事項' }),
                     m('h3', 'Log'),

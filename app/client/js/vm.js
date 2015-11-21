@@ -17,12 +17,16 @@ export default class Vm {
         this.apiKey = m.prop(null);
         this.secretKey = m.prop(null);
 
+        this.apiKeyShow = m.prop(false);
+        this.secretKeyShow = m.prop(false);
+
         this.keyValidator = keyValidator;
         this.prepareValidator = prepareValidator;
 
         this.zoneName = m.prop(null);
         this.offeringName = m.prop(null);
         this.name = m.prop(null);
+        this.email = m.prop(null);
 
         this.messages = m.prop([]);
         this.socket = io.connect('//'+location.host);
@@ -42,6 +46,14 @@ export default class Vm {
         });
 
         return vmInstance;
+    }
+
+    toggleApiKey(show) {
+        this.apiKeyShow(show);
+    }
+
+    toggleSecretKey(show) {
+        this.secretKeyShow(show);
     }
 
     prepare() {
@@ -84,6 +96,7 @@ export default class Vm {
         m.route('/display');
 
         this.socket.emit('deploy', this.endpoint(), this.apiKey(), this.secretKey(),
-                         this.zoneName(), this.offeringName(), this.name());
+                         this.zoneName(), this.offeringName(),
+                         this.name(), this.email());
     }
 }

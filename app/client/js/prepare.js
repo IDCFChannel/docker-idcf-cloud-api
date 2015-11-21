@@ -2,7 +2,8 @@ import m from 'mithril';
 import Alert from './alert';
 const PreparePage = {
     controller: (args) => {
-        if (args.vm.keyValidator.hasErrors() || !args.vm.zones || !args.vm.offerings) {
+        if (args.vm.keyValidator.hasErrors() || !args.vm.zones
+            || !args.vm.offerings || !args.vm.email) {
             return m.route('/key');
         }
         return {
@@ -21,9 +22,7 @@ const PreparePage = {
                                                             mode: 'danger',
                                                             title: 'エラー' }) : '',
                             m('div', { class: 'form-group'+(ctrl.vm.prepareValidator.hasError('zoneName') ? ' has-error': '') } , [
-                                m('label', { class: 'control-label',
-                                             type: 'text',
-                                             for: 'zone-group' },
+                                m('label', { class: 'control-label', for: 'zone-group' },
                                   ctrl.vm.prepareValidator.hasError('zoneName') ? ctrl.vm.prepareValidator.hasError('zoneName') : 'ZONES'),
                                 m('br'),
                                 m('div', { class: 'btn-group btn-group-lg'+(ctrl.vm.prepareValidator.hasError('zoneName') ? ' has-error': '') ,
@@ -39,9 +38,7 @@ const PreparePage = {
                                  ),
                             ]),
                             m('div', { class: 'form-group'+(ctrl.vm.prepareValidator.hasError('offeringName') ? ' has-error': '') } , [
-                                m('label', { class: 'control-label',
-                                             type: 'text',
-                                             for: 'offering-group' },
+                                m('label', { class: 'control-label', for: 'offering-group' },
                                   ctrl.vm.prepareValidator.hasError('offeringName') ? ctrl.vm.prepareValidator.hasError('offeringName') : 'OFFERING'),
 
                                 m('br'),
@@ -58,9 +55,7 @@ const PreparePage = {
                                  ),
                             ]),
                             m('div', { class: 'form-group'+(ctrl.vm.prepareValidator.hasError('name') ? ' has-error has-feedback': '') } , [
-                                m('label', { class: 'control-label',
-                                             type: 'text',
-                                             for: 'name' },
+                                m('label', { class: 'control-label', for: 'name' },
                                   ctrl.vm.prepareValidator.hasError('name') ? ctrl.vm.prepareValidator.hasError('name') : 'NAME'),
                                 m('input', { type: 'text',
                                              id: 'name',
@@ -72,6 +67,22 @@ const PreparePage = {
                                              value: ctrl.vm.name()
                                            }),
                                 ctrl.vm.prepareValidator.hasError('name') ? m('span', { class: 'glyphicon glyphicon-remove form-control-feedback', ariaHidden: true }) : ''
+                            ]),
+
+                            m('div', { class: 'form-group'+(ctrl.vm.prepareValidator.hasError('email') ? ' has-error has-feedback': '') } , [
+                                m('label', { class: 'control-label', for: 'email' },
+                                  ctrl.vm.prepareValidator.hasError('email') ? ctrl.vm.prepareValidator.hasError('email') : 'EMAIL'),
+                                m('input', { type: 'text',
+                                             id: 'email',
+                                             class: 'form-control input-lg',
+                                             placeholder: 'email',
+                                             ariaDescribedby: 'email',
+                                             onchange: m.withAttr('value',
+                                                                  ctrl.vm.email),
+                                             value: ctrl.vm.email()
+                                           }),
+                                ctrl.vm.prepareValidator.hasError('email') ? m('span', { class: 'glyphicon glyphicon-remove form-control-feedback', ariaHidden: true }) : ''
+
                             ]),
 
                             m('a', { class: 'btn btn-info btn-lg btn-margin-right',

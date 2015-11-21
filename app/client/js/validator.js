@@ -1,6 +1,7 @@
 import m from 'mithril';
 import mvalidator from 'mithril-validator';
 mvalidator(m);
+import validation from 'validator';
 
 export const keyValidator = new m.validator({
     endpoint: (endpoint) => {
@@ -34,6 +35,14 @@ export const prepareValidator = new m.validator({
     name: (name) => {
         if (!name) {
             return 'NAME is required';
+        }
+    },
+    email: (email) => {
+        if (!email) {
+            return 'EMAIL is required';
+        }
+        if (!validation.isEmail(email)) {
+            return 'EMAIL is not valid';
         }
     }
 });
