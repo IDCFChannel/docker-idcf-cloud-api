@@ -219,7 +219,7 @@ io.on('connection', (socket) => {
                 //let text = JSON.stringify(info);
                 let text = tplMail(vmInfo, devices);
                 let retval = sendGridMail(email, text);
-
+                console.log(retval);
                 socket.emit(newdata, retval);
                 return command.exec('deleteSSHKeyPair', { name: keypair });
             })
