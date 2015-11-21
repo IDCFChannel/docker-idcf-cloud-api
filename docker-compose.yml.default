@@ -11,6 +11,8 @@ idcfcloud:
     - IDCF_KEYPAIR=
     - MASTER_NAME=salt
     - EXPRESS_PORT=3000
+    - SENDGRID_FROM=
+    - SENDGRID_API_KEY=
 openresty:
   restart: always
   image: tenstartups/openresty
