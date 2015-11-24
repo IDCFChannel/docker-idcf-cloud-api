@@ -1,14 +1,15 @@
 import m from 'mithril';
 import 'bootstrap';
-import 'bootstrap/dist/css/bootstrap.css';
-
+//import 'bootstrap/dist/css/bootstrap.css';
+import '../css/bootstrap.min.css';
+import '../css/main.css';
 import Vm from './vm';
 import NavBar from './navbar';
 import KeyPage from './key';
 import PreparePage from './prepare';
 import DisplayPage from './display';
 
-import '../css/main.css';
+
 const vm = new Vm();
 
 const key = m.component(KeyPage, { vm: vm });

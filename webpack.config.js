@@ -38,6 +38,9 @@ module.exports = {
             test   : /\.less$/,
             loader : 'style!css!less'
         }, {
+            test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+            loader: 'url?limit=100000'
+/*
             test   : /\.woff/,
             loader : 'url?prefix=font/&limit=10000&mimetype=application/font-woff'
         }, {
@@ -49,6 +52,7 @@ module.exports = {
         }, {
             test   : /\.svg/,
             loader : 'file?prefix=font/'
+*/
         }],
         resolve: {
             extensions: ['', '.js']
