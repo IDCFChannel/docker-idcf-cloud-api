@@ -16,7 +16,7 @@ const DisplayPage = {
                 m('.col-md-10.col-md-offset-1', [
                     m.component(Alert,
                                 { messages: ['完了までに10分ほどかかる場合があります。画面を閉じずにお待ちください。',
-                                             '仮想マシンのデバイスの情報は'+ ctrl.vm.email() +' 宛に送信されます。'],
+                                             'デバイスの情報は'+ ctrl.vm.email() +' 宛に送信されます。'],
                                   mode: 'info',
                                   title: '注意事項' }),
                     m('h3', 'Log'),
