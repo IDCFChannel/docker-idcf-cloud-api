@@ -9,7 +9,7 @@ const KeyPage = {
     view: (ctrl) => {
         return ('.container-fluid', [
             m('.row' , [
-                m('.col-md-10.col-md-offset-1', [
+                m('.col-sm-10.col-sm-offset-1.col-md-10.col-md-offset-1', [
                     m('.panel.panel-default', [
                         m('.panel-heading', 'API情報'),
                         m('.panel-body', [

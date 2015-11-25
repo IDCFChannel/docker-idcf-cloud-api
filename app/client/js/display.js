@@ -13,7 +13,7 @@ const DisplayPage = {
     view: (ctrl) => {
         return m('.container-fluid', [
             m('.row' , [
-                m('.col-md-10.col-md-offset-1', [
+                m('.col-sm-10.col-sm-offset-1.col-md-10.col-md-offset-1', [
                     m.component(Alert,
                                 { messages: ['完了までに10分ほどかかる場合があります。画面を閉じずにお待ちください。',
                                              'デバイスの情報は'+ ctrl.vm.email() +' 宛に送信されます。'],

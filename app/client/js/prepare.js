@@ -13,7 +13,7 @@ const PreparePage = {
     view: (ctrl) => {
         return m('.container-fluid', [
             m('.row' , [
-                m('.col-md-10.col-md-offset-1', [
+                m('.col-sm-10.col-sm-offset-1.col-md-10.col-md-offset-1', [
                     m('.panel.panel-default', [
                         m('.panel-heading', '仮想マシン'),
                         m('.panel-body', [
