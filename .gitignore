@@ -1,6 +1,7 @@
 # Created by https://www.gitignore.io
 docker-compose.yml
 docker-compose.cli.yml
+docker-compose.dev.yml
 dist/js
 dist/waltiab*
 data/vms.json
