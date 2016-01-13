@@ -2,7 +2,7 @@
 set -eo pipefail
 
 cp /etc/apt/sources.list{,.orig}
-sed -i".back" -e "s,//jp.archive.ubuntu.com,//us.archive.ubuntu.com,g" /etc/apt/sources.list
+sed -i".back" -e "s,//ftp.jp.debian.org,//ftp.us.debian.org,g" /etc/apt/sources.list
 
 mkdir -p /etc/salt/minion.d /srv
 
