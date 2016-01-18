@@ -2,55 +2,83 @@
 
 const Mustache = require('mustache');
 const yaml = require('js-yaml');
+const should = require('chai').should();
 
-function test(vmInfo, devices) {
+describe('Mustache template', () => {
+    let vmInfo = {
+        name: 'a',
+        password: 'b',
+        publicip: 'c'
+    };
+
     let sshView = {
         hostname: vmInfo.name,
         password: vmInfo.password,
         publicip: vmInfo.publicip
     };
 
-    let sshTpl = [
-        'hostname: {{hostname}}',
-        'password: {{password}}',
-        'ssh root@{{publicip}} -o PreferredAuthentications=password'
-    ].join('\n');
+    let devices = [{
+        keyword: 'a',
+        uuid: '11',
+        token: '22'
+    },{
+        keyword: 'b',
+        uuid: '33',
+        token: '44'
+    }];
 
-    let sshText = Mustache.render(sshTpl, sshView);
+    it('dumps yaml', () => {
 
-    let devicesTpl = [
-        '{{#devices}}',
-        '{{keyword}}',
-        '{{uuid}}',
-        '{{token}}',
-        '{{/devices}}'
-    ].join('\n');
+        let dump = {
+            ssh: sshView,
+            devices: devices
+        };
 
-    let devicesText = Mustache.render(devicesTpl, {devices:devices});
-    console.log(devicesText);
-    console.log(sshView);
-    let dump = {
-        ssh: sshView,
-        devices: devices
-    };
-    return yaml.safeDump(dump);
-}
-
-
-let devices = [{
-    keyword: 'a',
-    uuit: '11',
+        let yamlText = yaml.safeDump(dump);
+        yamlText.should.equal(`ssh:
+  hostname: a
+  password: b
+  publicip: c
+devices:
+  - keyword: a
+    uuid: '11'
     token: '22'
-},{
-    keyword: 'a',
-    uuit: '11',
-    token: '22'
-}];
+  - keyword: b
+    uuid: '33'
+    token: '44'
+`);
 
-let vmInfo = {
-    name: 'a',
-    password: 'b',
-    publicip: 'c'
-};
+    });
 
-console.log(test(vmInfo, devices));
+    it('renders ssh text', () => {
+        let sshTpl = [
+            'hostname: {{hostname}}',
+            'password: {{password}}',
+            'ssh root@{{publicip}} -o PreferredAuthentications=password'
+        ].join('\n');
+
+        let sshText = Mustache.render(sshTpl, sshView);
+        sshText.should.equal(`hostname: a
+password: b
+ssh root@c -o PreferredAuthentications=password`);
+    });
+
+    it('renders devices text', () => {
+        let devicesTpl = [
+            '{{#devices}}',
+            '{{keyword}}',
+            '{{uuid}}',
+            '{{token}}',
+            '{{/devices}}'
+        ].join('\n');
+
+        let devicesText = Mustache.render(devicesTpl, {devices:devices});
+        devicesText.should.equal(`a
+11
+22
+b
+33
+44
+`);
+    });
+});

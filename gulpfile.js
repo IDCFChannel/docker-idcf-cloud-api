@@ -1,7 +1,9 @@
 'use strict';
+
 const gulp = require('gulp');
 const gutil = require('gulp-util');
 const eslint = require('gulp-eslint');
+const mocha = require('gulp-mocha');
 const nodemon = require('gulp-nodemon');
 const config = require('./config');
 const webpackConfig = require('./webpack.config.production');
@@ -46,6 +48,11 @@ gulp.task('lint', () => {
 
 gulp.task('watch', () => {
     gulp.watch([config.gulpServerSrc, config.gulpCliSrc], ['lint']);
+});
+
+gulp.task('test', () => {
+    return gulp.src([config.gulpTestSrc], { read: false })
+        .pipe(mocha({ reporter: 'nyan' }));
 });
 
 gulp.task('default', ['watch']);

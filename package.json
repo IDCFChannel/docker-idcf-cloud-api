@@ -42,13 +42,18 @@
         "gulp": "~3.9.0",
         "gulp-nodemon": "~2.0.4",
         "gulp-util": "~3.0.7",
-        "gulp-eslint": "~1.0.0"
+        "gulp-eslint": "~1.0.0",
+        "gulp-mocha": "~2.2.0",
+        "mocha": "~2.3.4",
+        "chai": "~3.4.1",
+        "sinon": "~1.17.2"
     },
     "scripts": {
         "start":   "gulp webpack && NODE_ENV=production node ./app/server/server",
         "cli":     "node ./app/cli/index.js",
         "nodemon": "gulp nodemon",
         "watch":   "gulp watch",
+        "test":    "gulp test",
         "build":   "gulp webpack"
     }
 }

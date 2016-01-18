@@ -3,6 +3,7 @@ const path = require('path');
 
 const rootDir = '/app';
 const appDir = path.join(rootDir, 'app');
+const testDir = path.join(rootDir, 'test');
 const dataDir = path.join(rootDir, 'data');
 const distDir = path.join(rootDir, 'dist');
 const keysDir = path.join('/dist', 'keys');
@@ -13,6 +14,7 @@ const cliDir = path.join(appDir, 'cli');
 
 const config = {
     gulpServerSrc: serverDir+'/*.js',
+    gulpTestSrc: testDir+'/*.js',
     gulpCliSrc: cliDir+'/*.js',
     keysDir: keysDir,
     distDir: distDir,
@@ -25,7 +27,8 @@ const config = {
     zone: 'henry',
     /*zone: 'augusta',*/
     offering: 'light.S2',
-    template: 'Debian 8.2.0 64-bit',
+    /*template: 'Debian 8.2.0 64-bit',*/
+    template: 'Ubuntu Server 14.04 LTS 64-bit',
     templatefilter: 'featured',
     keypair: process.env.IDCF_KEYPAIR,
     privateKey: path.join(keysDir, 'id-rsa_'+process.env.IDCF_KEYPAIR),
