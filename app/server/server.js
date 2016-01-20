@@ -9,14 +9,13 @@ const _ = require('lodash');
 const config = require('../../config');
 const deploy = require('../cli/deployCommand');
 
-const app = express();
-const server = app.listen(config.port);
-//const bodyParser = require('body-parser');
+const app = module.exports = express();
 
-const io = require('socket.io')(server);
 const isProduction = process.env.NODE_ENV === 'production';
+const isDevelopment = process.env.NODE_ENV === 'development';
+const isTest = process.env.NODE_ENV === 'test';
 
-if(!isProduction) {
+if(isDevelopment) {
     const webpack = require('webpack');
     const webpackConfig = require('../../webpack.config.js');
     const compiler = webpack(webpackConfig);
@@ -32,6 +31,9 @@ const validation = require('validator');
 const Mustache = require('mustache');
 const yaml = require('js-yaml');
 
+app.use(favicon(path.join(config.distDir, 'images/favicon.ico')));
+app.use(express.static(config.distDir));
+
 function buildCommand(endpoint, apiKey, secretKey) {
     let client = idcf({
         endpoint: endpoint.trim(),
@@ -42,65 +44,19 @@ function buildCommand(endpoint, apiKey, secretKey) {
     return command;
 }
 
-app.use(favicon(path.join(config.distDir, 'images/favicon.ico')));
-app.use(express.static(config.distDir));
-//app.use(bodyParser.json());
-
 app.get('/', (req, res) => {
     res.sendFile(path.join(config.distDir, 'index.html'));
 });
 
-app.get('/zones', (req, res) => {
-    let command = buildCommand(req.query.endpoint, req.query.apiKey, req.query.secretKey);
-
-    command.exec('listPublicIpAddresses')
-    .then((ipaddresses) => {
-        return [...new Set(ipaddresses.map((ipaddress) => ipaddress.zoneid))];
-    })
-    .then((zoneids) => {
-        command.exec('listZones')
-               .then((zones) => {
-                   let retval = zones
-                       .filter((zone) => _.includes(zoneids, zone.id))
-                       .map((zone) => {
-                           return { id: zone.id, name: zone.name }
-                       });
-                   res.json(retval);
-               });
-    })
-    .catch((err) => {
-        if (err.stack) {
-            console.log('/zones: '+err.stack);
-        } else {
-            console.log('/zones: '+err);
-        }
-        res.status(500).send({ error: 'API情報が正しくありません。' });
-    });
-
+app.use((req, res, next) => {
+    req.command = buildCommand(req.query.endpoint,
+                               req.query.apiKey,
+                               req.query.secretKey
+                               );
+    next();
 });
 
-app.get('/offerings', (req, res) => {
-    let command = buildCommand(req.query.endpoint, req.query.apiKey, req.query.secretKey);
-
-    command.exec('listServiceOfferings')
-    .then((offerings) => {
-        let retval = offerings.filter((offering) =>
-                                      _.includes(['light.S1','light.S2'], offering.name)
-                              )
-                              .map((offering) => {
-                                  return { id: offering.id, name: offering.name };
-                              });
-        res.json(retval);
-    })
-    .catch((err) => {
-        if (err.stack) {
-            console.log('/offerings: '+err.stack);
-        } else {
-            console.log('/offerings: '+err);
-        }
-        res.status(500).send({ error: 'API情報が正しくありません。' });
-    });
-});
+app.use('/api', require('./routes'));
 
 function sendGridMail(to, text) {
     let from = process.env.SENDGRID_FROM;
@@ -188,60 +144,65 @@ function shellExecute(script, privateKey, publicip) {
     });
 }
 
-io.on('connection', (socket) => {
-    console.log('new user connected');
+if(!isTest) {
+    const server = app.listen(config.port);
+    const io = require('socket.io')(server);
 
-    socket.on('deploy', (endpoint, apiKey, secretKey, zoneName, offeringName, name, email) => {
-        let start = Date.now();
-        let keypair = config.keypair+start;
-        let privateKey = config.privateKey+start;
-        let command = buildCommand(endpoint, apiKey, secretKey);
+    io.on('connection', (socket) => {
+        console.log('new user connected');
 
-        //socket.emit(newdata, name+' start a deployment at '+moment(start,'x').tz("Asia/Tokyo").format()+'.\n'+'please wait a few minutes.\n');
-        socket.emit(newdata, tplStart(name, start));
+        socket.on('deploy', (endpoint, apiKey, secretKey, zoneName, offeringName, name, email) => {
+            let start = Date.now();
+            let keypair = config.keypair+start;
+            let privateKey = config.privateKey+start;
+            let command = buildCommand(endpoint, apiKey, secretKey);
 
-        if (!validation.isEmail(email)) {
-            return socket.emit(newdata, 'Emailが正しくありません。');
-        }
+            //socket.emit(newdata, name+' start a deployment at '+moment(start,'x').tz("Asia/Tokyo").format()+'.\n'+'please wait a few minutes.\n');
+            socket.emit(newdata, tplStart(name, start));
 
-        let vmInfo;
-        deploy(command, name, keypair, privateKey,
-               zoneName, offeringName, config)
-            .then((res) => {
-                vmInfo = res;
-                socket.emit(deployed, JSON.stringify(vmInfo));
-                return shellInstall(socket, 'masterless.sh', privateKey, name,
-                                    vmInfo.publicip);
-            })
-            .then(() => {
-                return shellExecute('devices.sh', privateKey, vmInfo.publicip);
-            })
-            .then((res) => {
-                let devices = JSON.parse(res.replace('ssh success',''));
+            if (!validation.isEmail(email)) {
+                return socket.emit(newdata, 'Emailが正しくありません。');
+            }
 
-                //let info = _.merge(vmInfo, devices);
-                //let text = JSON.stringify(info);
-                let text = tplMail(vmInfo, devices);
-                let retval = sendGridMail(email, text);
-                console.log(retval);
-                socket.emit(newdata, retval);
-                return command.exec('deleteSSHKeyPair', { name: keypair });
-            })
-            .then((success) => {
-                console.log('delete '+keypair+' : '+success);
-                console.log('Elapsed Time: ' + (Date.now() - start)/1000.0 + ' seconds');
-            })
-            .catch((err) => {
-                console.log(err.toString());
-                socket.emit(newdata, err.toString());
-                command.exec('deleteSSHKeyPair', { name: keypair })
-                    .then((success) => {
-                        console.log('delete '+keypair+' : '+success);
-                    });
-            });
+            let vmInfo;
+            deploy(command, name, keypair, privateKey,
+                   zoneName, offeringName, config)
+                .then((res) => {
+                    vmInfo = res;
+                    socket.emit(deployed, JSON.stringify(vmInfo));
+                    return shellInstall(socket, 'masterless.sh', privateKey, name,
+                                        vmInfo.publicip);
+                })
+                .then(() => {
+                    return shellExecute('devices.sh', privateKey, vmInfo.publicip);
+                })
+                .then((res) => {
+                    let devices = JSON.parse(res.replace('ssh success',''));
+
+                    //let info = _.merge(vmInfo, devices);
+                    //let text = JSON.stringify(info);
+                    let text = tplMail(vmInfo, devices);
+                    let retval = sendGridMail(email, text);
+                    console.log(retval);
+                    socket.emit(newdata, retval);
+                    return command.exec('deleteSSHKeyPair', { name: keypair });
+                })
+                .then((success) => {
+                    console.log('delete '+keypair+' : '+success);
+                    console.log('Elapsed Time: ' + (Date.now() - start)/1000.0 + ' seconds');
+                })
+                .catch((err) => {
+                    console.log(err.toString());
+                    socket.emit(newdata, err.toString());
+                    command.exec('deleteSSHKeyPair', { name: keypair })
+                        .then((success) => {
+                            console.log('delete '+keypair+' : '+success);
+                        });
+                });
+        });
+
+        socket.on('disconnect', () => {
+            console.log('user disconnected');
+        });
     });
-
-    socket.on('disconnect', () => {
-        console.log('user disconnected');
-    });
-});
+}

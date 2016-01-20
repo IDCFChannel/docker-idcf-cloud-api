@@ -7,7 +7,7 @@ export class Zone {
     }
     static listZones(data) {
         return m.request({ method: 'GET',
-                           url: '/zones',
+                           url: '/api/zones',
                            data: data,
                            type: Zone,
                            initialValue: [] });
@@ -21,7 +21,7 @@ export class Offering {
     }
     static listOfferings(data) {
         return m.request({ method: 'GET',
-                           url: '/offerings',
+                           url: '/api/offerings',
                            data: data,
                            type: Zone,
                            initialValue: [] });

@@ -6,6 +6,7 @@ dist/js
 dist/waltiab*
 data/vms.json
 nginx/conf/certs
+tmp
 
 ### Linux ###
 *~

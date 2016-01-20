@@ -51,6 +51,7 @@ gulp.task('watch', () => {
 });
 
 gulp.task('test', () => {
+    process.env.NODE_ENV = 'test';
     return gulp.src([config.gulpTestSrc], { read: false })
         .pipe(mocha({ reporter: 'nyan' }));
 });
