@@ -14,7 +14,7 @@ function getOfferings(req, res) {
                               .map((offering) => {
                                   return { id: offering.id, name: offering.name };
                               });
-        console.log(res.json);
+        res.json(retval);
     })
     .catch((err) => {
         if (err.stack) {
