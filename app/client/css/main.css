@@ -1,7 +1,11 @@
 #log {
-    height: 350px;
+    height: 280px;
     overflow: auto;
     word-wrap: break-word;
+}
+
+span.alert-title {
+    padding-left: 2px;
 }
 
 .top-buffer { margin-top:20px; }

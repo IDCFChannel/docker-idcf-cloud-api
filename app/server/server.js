@@ -3,11 +3,14 @@
 const express = require('express');
 const favicon = require('serve-favicon');
 const path = require('path');
-const moment = require ('moment-timezone');
 const spawn = require('child_process').spawn;
-const _ = require('lodash');
+const validation = require('validator');
+
 const config = require('../../config');
 const deploy = require('../cli/deployCommand');
+const createCommand = require('./lib/createCommand');
+const sendgrid = require('./lib/sendgrid');
+const Templates = require('./lib/Templates');
 
 const app = module.exports = express();
 
@@ -26,81 +29,23 @@ if(isDevelopment) {
     app.use(require('webpack-hot-middleware')(compiler));
 }
 
-const idcf = require('idcf-cloud-api');
-const validation = require('validator');
-const Mustache = require('mustache');
-const yaml = require('js-yaml');
-
 app.use(favicon(path.join(config.distDir, 'images/favicon.ico')));
 app.use(express.static(config.distDir));
-
-function buildCommand(endpoint, apiKey, secretKey) {
-    let client = idcf({
-        endpoint: endpoint.trim(),
-        apiKey: apiKey.trim(),
-        secretKey: secretKey.trim()
-    });
-    let command = require('../cli/command')(client, config.sleepTime);
-    return command;
-}
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(config.distDir, 'index.html'));
 });
 
 app.use((req, res, next) => {
-    req.command = buildCommand(req.query.endpoint,
-                               req.query.apiKey,
-                               req.query.secretKey
+    req.command = createCommand(req.query.endpoint,
+                                req.query.apiKey,
+                                req.query.secretKey,
+                                config.sleepTime
                                );
     next();
 });
 
 app.use('/api', require('./routes'));
-
-function sendGridMail(to, text) {
-    let from = process.env.SENDGRID_FROM;
-    let apiKey = process.env.SENDGRID_API_KEY;
-    if (!from || !apiKey) {
-        return 'サーバーのメール設定がありません。';
-    }
-
-    let sendgrid  = require('sendgrid')(apiKey);
-    sendgrid.send({
-        to:       to,
-        from:     from,
-        subject:  'IDCF チャンネルをインストールしました。',
-        text:     text
-    }, (err, json) => {
-        if (err) {
-            return err;
-        } else {
-            return to+' 宛にメールを送信しました。'
-        }
-    });
-}
-
-function tplStart(name, start) {
-    let view = {
-        name: name,
-        time: moment(start,'x').tz('Asia/Tokyo').format()
-    };
-    let tpl = '{{name}} start a deployment at {{time}}.\nplease wait a few minutes.\n';
-    return Mustache.render(tpl, view);
-}
-
-function tplMail(vmInfo, devices) {
-    let dump = {
-        server: {
-            hostname: vmInfo.name,
-            publicip: vmInfo.publicip
-        },
-        devices: devices
-    }
-
-    let retval = '# IDCFチャンネルのデバイス情報\n\n';
-    return yaml.safeDump(dump);
-}
 
 const newdata = 'newdata';
 const deployed = 'deployed';
@@ -151,14 +96,15 @@ if(!isTest) {
     io.on('connection', (socket) => {
         console.log('new user connected');
 
-        socket.on('deploy', (endpoint, apiKey, secretKey, zoneName, offeringName, name, email) => {
+        socket.on('deploy', (endpoint, apiKey, secretKey, zoneName,
+                             offeringName, name, email) => {
             let start = Date.now();
             let keypair = config.keypair+start;
             let privateKey = config.privateKey+start;
-            let command = buildCommand(endpoint, apiKey, secretKey);
+            let command = createCommand(endpoint, apiKey, secretKey,
+                                        config.sleepTime);
 
-            //socket.emit(newdata, name+' start a deployment at '+moment(start,'x').tz("Asia/Tokyo").format()+'.\n'+'please wait a few minutes.\n');
-            socket.emit(newdata, tplStart(name, start));
+            socket.emit(newdata, Templates.start(name, start));
 
             if (!validation.isEmail(email)) {
                 return socket.emit(newdata, 'Emailが正しくありません。');
@@ -178,12 +124,9 @@ if(!isTest) {
                 })
                 .then((res) => {
                     let devices = JSON.parse(res.replace('ssh success',''));
+                    let text = Templates.email(vmInfo, devices);
+                    let retval = sendgrid(email, text);
 
-                    //let info = _.merge(vmInfo, devices);
-                    //let text = JSON.stringify(info);
-                    let text = tplMail(vmInfo, devices);
-                    let retval = sendGridMail(email, text);
-                    console.log(retval);
                     socket.emit(newdata, retval);
                     return command.exec('deleteSSHKeyPair', { name: keypair });
                 })

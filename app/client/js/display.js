@@ -16,12 +16,13 @@ const DisplayPage = {
                 m('.col-sm-10.col-sm-offset-1.col-md-10.col-md-offset-1', [
                     m.component(Alert,
                                 { messages: ['完了までに10分ほどかかる場合があります。画面を閉じずにお待ちください。',
-                                             'デバイスの情報は'+ ctrl.vm.email() +' 宛に送信されます。'],
-                                  mode: 'info',
+                                             'デバイスの情報は'+ ctrl.vm.email() +' 宛に送信されます。',
+                                            'Logにエラーが表示された場合は仮想マシンの削除とIPアドレスの解放を行い、インストールをやり直してください。'],
+                                  mode: 'warning',
                                   title: '注意事項' }),
                     m('h3', 'Log'),
                     m('pre#log'),
-                    m('.panel.panel-success', [
+                    m('.panel.panel-info', [
                         m('.panel-heading', '仮想マシン情報'),
                         m('.panel-body', [
                             m('ul.list-group',

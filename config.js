@@ -27,8 +27,8 @@ const config = {
     zone: 'henry',
     /*zone: 'augusta',*/
     offering: 'light.S2',
-    /*template: 'Debian 8.2.0 64-bit',*/
-    template: 'Ubuntu Server 14.04 LTS 64-bit',
+    template: 'Debian 8.2.0 64-bit',
+    /*template: 'Ubuntu Server 14.04 LTS 64-bit',*/
     templatefilter: 'featured',
     keypair: process.env.IDCF_KEYPAIR,
     privateKey: path.join(keysDir, 'id-rsa_'+process.env.IDCF_KEYPAIR),
