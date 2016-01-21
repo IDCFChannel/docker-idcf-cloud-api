@@ -37,7 +37,9 @@ const config = {
     cidrlist: '0.0.0.0/0',
     ports: [22, 80, 443, 1883, 8080, 3030],
     master: process.env.MASTER_NAME,
-    port: process.env.EXPRESS_PORT
+    port: process.env.EXPRESS_PORT,
+    newdata: 'newdata',
+    deployed: 'deployed'
 };
 
 module.exports = config;

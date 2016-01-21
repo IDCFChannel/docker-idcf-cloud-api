@@ -10,7 +10,7 @@ const Templates = {
             name: name,
             time: moment(start,'x').tz('Asia/Tokyo').format()
         };
-        let tpl = '{{name}} start a deployment at {{time}}.\nplease wait a few minutes.\n';
+        let tpl = '{{name}} starts a deployment at {{time}}.\nplease wait a few minutes.\n';
         return Mustache.render(tpl, view);
     },
     email: function(vmInfo, devices) {

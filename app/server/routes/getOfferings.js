@@ -17,11 +17,7 @@ function getOfferings(req, res) {
         res.json(retval);
     })
     .catch((err) => {
-        if (err.stack) {
-            console.log('/offerings: '+err.stack);
-        } else {
-            console.log('/offerings: '+err);
-        }
+        console.log(err.stack || e);
         res.status(500).send({ error: 'API情報が正しくありません。' });
     });
 }
