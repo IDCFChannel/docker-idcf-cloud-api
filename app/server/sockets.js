@@ -85,7 +85,7 @@ function sockets(server) {
                 let text = Templates.email(vmInfo, devices);
                 let retval = sendgrid(email, text);
 
-                socket.emit(newdata, retval);
+                socket.emit(config.newdata, retval);
                 let success = yield command.exec('deleteSSHKeyPair', { name: keypair });
 
                 console.log('delete '+keypair+' : '+success);

@@ -20,7 +20,7 @@ const DisplayPage = {
                                             'Logにエラーが表示された場合は仮想マシンの削除とIPアドレスの解放を行い、インストールをやり直してください。'],
                                   mode: 'warning',
                                   title: '注意事項' }),
-                    m('h3', 'Log'),
+                    m('h4', 'Log'),
                     m('pre#log'),
                     m('.panel.panel-info', [
                         m('.panel-heading', '仮想マシン情報'),
