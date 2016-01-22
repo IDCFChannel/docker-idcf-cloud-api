@@ -42,7 +42,7 @@ app.use((req, res, next) => {
 
 app.use('/api', require('./routes'));
 
-if(!isTest) {
-    const server = app.listen(config.port);
-    require('./sockets')(server);
-}
+//if(!isTest) {
+//const server = app.listen(config.port);
+//require('./sockets')(server);
+//}

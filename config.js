@@ -39,7 +39,9 @@ const config = {
     master: process.env.MASTER_NAME,
     port: process.env.EXPRESS_PORT,
     newdata: 'newdata',
-    deployed: 'deployed'
+    deployed: 'deployed',
+    shellInstall: 'masterless.sh',
+    shellExecute: 'devices.sh'
 };
 
 module.exports = config;

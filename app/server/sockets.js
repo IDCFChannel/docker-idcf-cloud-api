@@ -1,6 +1,5 @@
 'use strict';
 
-const spawn = require('child_process').spawn;
 const validation = require('validator');
 const co = require('co');
 
@@ -9,52 +8,14 @@ const config = require('../../config');
 const createCommand = require('./lib/createCommand');
 const Templates = require('./lib/Templates');
 const sendgrid = require('./lib/sendgrid');
-
-
-function shellInstall(socket, script, privateKey, name, publicip) {
-    return new Promise((resolve, reject) => {
-        let myProcess = spawn('bash', [config.runner,
-                                       script, publicip,
-                                       privateKey, config.master]);
-        myProcess.stdout.on('data', (data) => {
-            console.log(data.toString());
-            socket.emit(config.newdata, data.toString());
-        });
-        myProcess.stderr.on('data', (data) => {
-            console.log('err: '+data.toString());
-            socket.emit(config.newdata, data.toString());
-        });
-        myProcess.on('close', (code) => {
-            if (code == 0)  resolve();
-            else  reject("code: "+code+" name: "+name);
-        });
-    });
-}
-
-function shellExecute(script, privateKey, publicip) {
-    return new Promise((resolve, reject) => {
-        let myProcess = spawn('bash', [config.runner,
-                                       script, publicip,
-                                       privateKey, config.master]);
-        let result = '';
-        myProcess.stdout.on('data', (data) => {
-            result += data.toString();
-        });
-        myProcess.stderr.on('data', (data) => {
-            console.log('err: '+data.toString());
-        });
-        myProcess.on('close', (code) => {
-            if (code == 0)  resolve(result);
-            else  reject("code: "+code);
-        });
-    });
-}
+const shell = require('./lib/shell');
+const winston = require('winston');
 
 function sockets(server) {
     const io = require('socket.io')(server);
 
     io.on('connection', (socket) => {
-        console.log('new user connected');
+        winston.log('new user connected');
 
         socket.on('deploy', (endpoint, apiKey, secretKey, zoneName,
                              offeringName, name, email) => {
@@ -77,9 +38,11 @@ function sockets(server) {
 
                 socket.emit(config.deployed, JSON.stringify(vmInfo));
 
-                yield shellInstall(socket, 'masterless.sh', privateKey, name, vmInfo.publicip);
+                yield shell.install(socket, config.shellInstall,
+                                    privateKey, name, vmInfo.publicip);
 
-                let result = yield shellExecute('devices.sh', privateKey, vmInfo.publicip);
+                let result = yield shell.execute(config.shellExecute,
+                                                 privateKey, vmInfo.publicip);
 
                 let devices = JSON.parse(result.replace('ssh success',''));
                 let text = Templates.email(vmInfo, devices);
@@ -104,7 +67,7 @@ function sockets(server) {
         });
 
         socket.on('disconnect', () => {
-            console.log('user disconnected');
+            winston.log('user disconnected');
         });
     });
 }

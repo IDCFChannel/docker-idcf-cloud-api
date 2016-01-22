@@ -1,14 +1,19 @@
 'use strict';
 
-const should = require('chai').should();
-const expect = require('chai').expect;
-const sinon  = require('sinon');
 const request = require('supertest');
-const app = require('../app/server');
+const app = require('../app/server/server');
 
-describe('GET /', () => {
+const port = 3000;
+
+describe('GET / requests', () => {
+
+    let server;
+
+    before(() => server = app.listen(port));
+    after(() => server.close());
+
     it('returns a 200 response', (done) => {
-        request(app)
+        request(server)
             .get('/')
             .expect(200, done);
     });
