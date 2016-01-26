@@ -1,7 +1,7 @@
 'use strict';
 
 const expect = require('chai').expect;
-const getOfferings = require('../app/server/routes/getOfferings');
+const getOfferings = require('../../../app/server/routes/getOfferings');
 
 describe('Get Offerings list', () => {
     it('should return list', () => {

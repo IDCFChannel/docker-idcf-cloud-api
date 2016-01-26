@@ -2,7 +2,7 @@
 
 const idcf = require('idcf-cloud-api');
 
-module.exports = function(endpoint, apiKey, secretKey, sleepTime) {
+function createCommand(endpoint, apiKey, secretKey, sleepTime) {
     let client = idcf({
         endpoint: endpoint.trim(),
         apiKey: apiKey.trim(),
@@ -10,3 +10,5 @@ module.exports = function(endpoint, apiKey, secretKey, sleepTime) {
     });
     return require('../../cli/command')(client, sleepTime);
 };
+
+module.exports = createCommand;

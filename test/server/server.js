@@ -1,7 +1,7 @@
 'use strict';
 
 const request = require('supertest');
-const app = require('../app/server/server');
+const app = require('../../app/server/server');
 
 const port = 3000;
 

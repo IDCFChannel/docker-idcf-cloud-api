@@ -13,7 +13,7 @@ function install(socket, script, privateKey, name, publicip) {
             socket.emit(config.newdata, data.toString());
         });
         myProcess.stderr.on('data', (data) => {
-            console.log('err: '+data.toString());
+            console.log(data.toString());
             socket.emit(config.newdata, data.toString());
         });
         myProcess.on('close', (code) => {

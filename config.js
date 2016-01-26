@@ -14,7 +14,7 @@ const cliDir = path.join(appDir, 'cli');
 
 const config = {
     gulpServerSrc: serverDir+'/*.js',
-    gulpTestSrc: testDir+'/*.js',
+    gulpTestSrc: testDir+'/**/*.js',
     gulpCliSrc: cliDir+'/*.js',
     keysDir: keysDir,
     distDir: distDir,

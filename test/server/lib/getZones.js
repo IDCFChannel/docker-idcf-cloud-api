@@ -2,7 +2,7 @@
 
 const expect = require('chai').expect;
 const sinon = require('sinon');
-const getZones = require('../app/server/routes/getZones');
+const getZones = require('../../../app/server/routes/getZones');
 
 describe('Get Zones list', () => {
     it('should return list', () => {

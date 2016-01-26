@@ -2,6 +2,7 @@
 
 const validation = require('validator');
 const co = require('co');
+const winston = require('winston');
 
 const deploy = require('../cli/deployCommand');
 const config = require('../../config');
@@ -9,7 +10,26 @@ const createCommand = require('./lib/createCommand');
 const Templates = require('./lib/Templates');
 const sendgrid = require('./lib/sendgrid');
 const shell = require('./lib/shell');
-const winston = require('winston');
+const deployGenerator = require('./lib/deployGenerator');
+
+function hasErrors(endpoint, apiKey, secretKey, email) {
+    let errors = [];
+
+    if (!endpoint) {
+        errors.push('endpointがありません。');
+    }
+    if (!apiKey) {
+        errors.push('apiKeyがありません。');
+    }
+    if (!secretKey) {
+        errors.push('secretKeyがありません。');
+    }
+    if (!validation.isEmail(email)) {
+        errors.push('Emailが正しくありません。');
+    }
+
+    return errors;
+}
 
 function sockets(server) {
     const io = require('socket.io')(server);
@@ -23,41 +43,22 @@ function sockets(server) {
             let keypair = config.keypair+start;
             let privateKey = config.privateKey+start;
 
+            let errors = hasErrors(endpoint, apiKey, secretKey, email);
+
+            if (errors.length) {
+                return socket.emit(config.newdata, errors.join('\n'));
+            }
+
             let command = createCommand(endpoint, apiKey, secretKey,
                                         config.sleepTime);
 
             socket.emit(config.newdata, Templates.start(name, start));
 
-            if (!validation.isEmail(email)) {
-                return socket.emit(config.newdata, 'Emailが正しくありません。');
-            }
-
-            let deployGenerator = co.wrap(function* () {
-                let vmInfo = yield deploy(command, name, keypair, privateKey,
-                                          zoneName, offeringName, config);
-
-                socket.emit(config.deployed, JSON.stringify(vmInfo));
-
-                yield shell.install(socket, config.shellInstall,
-                                    privateKey, name, vmInfo.publicip);
-
-                let result = yield shell.execute(config.shellExecute,
-                                                 privateKey, vmInfo.publicip);
-
-                let devices = JSON.parse(result.replace('ssh success',''));
-                let text = Templates.email(vmInfo, devices);
-                let retval = sendgrid(email, text);
-
-                socket.emit(config.newdata, retval);
-                let success = yield command.exec('deleteSSHKeyPair', { name: keypair });
-
-                console.log('delete '+keypair+' : '+success);
-                console.log('Elapsed Time: ' + (Date.now() - start)/1000.0 + ' seconds');
-            });
-
-            deployGenerator()
+            deployGenerator(socket, command, email, name, keypair,
+                            privateKey, zoneName, offeringName)
                 .catch((err) => {
                     console.log(err.stack || e);
+
                     socket.emit(newdata, err.toString());
                     command.exec('deleteSSHKeyPair', { name: keypair })
                         .then((success) => {

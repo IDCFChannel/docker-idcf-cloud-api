@@ -1,13 +1,14 @@
 'use strict';
 const co = require('co');
 const common = require('./common');
+const config = require('../../config');
 const thunkify = require('thunkify');
 const fs = require('fs');
 const writeFile = thunkify(fs.writeFile);
 const appendFile = thunkify(fs.appendFile);
 
 module.exports = co.wrap(function* (command, name, keypair, privateKey,
-                                    zoneName, offeringName, config) {
+                                    zoneName, offeringName) {
     let zone = yield command.exec('listZones',
                                   { name: zoneName });
     let zoneid = zone[0].id;
@@ -99,6 +100,5 @@ module.exports = co.wrap(function* (command, name, keypair, privateKey,
                            })
     );
 
-    //yield appendFile(config.vms, JSON.stringify(vmInfo));
     return vmInfo;
 });
