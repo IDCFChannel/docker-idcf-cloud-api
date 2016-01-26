@@ -88,6 +88,7 @@ export default class Vm {
 
     deploy() {
         this.error = m.prop(null);
+        this.messages = m.prop([]);
         this.prepareValidator.validate(this);
 
         if (this.prepareValidator.hasErrors()){

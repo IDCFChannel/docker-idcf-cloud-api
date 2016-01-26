@@ -54,8 +54,8 @@ function sockets(server) {
 
             socket.emit(config.newdata, Templates.start(name, start));
 
-            deployGenerator(socket, command, email, name, keypair,
-                            privateKey, zoneName, offeringName)
+            deployGenerator(socket, command, email, start,
+                            name, keypair, privateKey, zoneName, offeringName)
                 .catch((err) => {
                     console.log(err.stack || e);
 

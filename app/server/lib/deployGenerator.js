@@ -8,8 +8,8 @@ const Templates = require('./Templates');
 const sendgrid = require('./sendgrid');
 const shell = require('./shell');
 
-module.exports = co.wrap(function* (socket, command, email, name, keypair,
-                                    privateKey, zoneName, offeringName) {
+module.exports = co.wrap(function* (socket, command, email, start,
+                                    name, keypair, privateKey, zoneName, offeringName) {
 
     let vmInfo = yield deploy(command, name, keypair, privateKey,
                               zoneName, offeringName);
