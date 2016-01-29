@@ -22,7 +22,7 @@ const Templates = {
             devices: devices
         };
         let retval = '# IDCFチャンネルのデバイス情報\n\n';
-        return yaml.safeDump(dump);
+        return retval + yaml.safeDump(dump);
     }
 };
 

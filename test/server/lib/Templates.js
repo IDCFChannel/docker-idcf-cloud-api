@@ -1,10 +1,12 @@
 'use strict';
 
+
 const Mustache = require('mustache');
 const yaml = require('js-yaml');
 const should = require('chai').should();
+const Templates = require('../../../app/server/lib/Templates');
 
-describe('Mustache template', () => {
+describe('Mustache templates', () => {
     let vmInfo = {
         name: 'a',
         password: 'b',
@@ -26,6 +28,24 @@ describe('Mustache template', () => {
         uuid: '33',
         token: '44'
     }];
+
+    it('should render email body with devices', () => {
+        let emailBody = Templates.email(vmInfo, devices);
+        emailBody.should.equal(`# IDCFチャンネルのデバイス情報
+
+server:
+  hostname: a
+  publicip: c
+devices:
+  - keyword: a
+    uuid: '11'
+    token: '22'
+  - keyword: b
+    uuid: '33'
+    token: '44'
+`);
+
+    });
 
     it('dumps yaml', () => {
 
