@@ -10,7 +10,7 @@ describe('Mustache templates', () => {
     let vmInfo = {
         name: 'a',
         password: 'b',
-        publicip: 'c'
+        publicip: '127.0.0.1'
     };
 
     let sshView = {
@@ -35,7 +35,8 @@ describe('Mustache templates', () => {
 
 server:
   hostname: a
-  publicip: c
+  publicip: 127.0.0.1
+  sample_app: 'http://127.0.0.1:3030'
 devices:
   - keyword: a
     uuid: '11'
@@ -58,7 +59,7 @@ devices:
         yamlText.should.equal(`ssh:
   hostname: a
   password: b
-  publicip: c
+  publicip: 127.0.0.1
 devices:
   - keyword: a
     uuid: '11'
@@ -80,7 +81,7 @@ devices:
         let sshText = Mustache.render(sshTpl, sshView);
         sshText.should.equal(`hostname: a
 password: b
-ssh root@c -o PreferredAuthentications=password`);
+ssh root@127.0.0.1 -o PreferredAuthentications=password`);
     });
 
     it('renders devices text', () => {

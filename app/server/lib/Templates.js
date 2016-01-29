@@ -17,7 +17,8 @@ const Templates = {
         let dump = {
             server: {
                 hostname: vmInfo.name,
-                publicip: vmInfo.publicip
+                publicip: vmInfo.publicip,
+                sample_app: 'http://'+vmInfo.publicip+':3030'
             },
             devices: devices
         };

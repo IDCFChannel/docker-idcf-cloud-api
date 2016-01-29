@@ -53,7 +53,7 @@
         "proxyquire": "^1.7.3"
     },
     "scripts": {
-        "start":   "gulp webpack && NODE_ENV=production node ./app/server/server",
+        "start":   "gulp webpack && NODE_ENV=production node ./app/server/index.js",
         "cli":     "node ./app/cli/index.js",
         "nodemon": "gulp nodemon",
         "watch":   "gulp watch",
