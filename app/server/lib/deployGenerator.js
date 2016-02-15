@@ -19,11 +19,15 @@ module.exports = co.wrap(function* (socket, command, email, start,
     yield shell.install(socket, config.shellInstall,
                         privateKey, name, vmInfo.publicip);
 
-    let result = yield shell.execute(config.shellExecute,
+    let basicRes = yield shell.execute(config.shellBasic,
+                                     privateKey, vmInfo.publicip);
+    console.log(basicRes);
+    let basic = JSON.parse(basicRes);
+    let devicesRes = yield shell.execute(config.shellDevices,
                                      privateKey, vmInfo.publicip);
 
-    let devices = JSON.parse(result.replace('ssh success',''));
-    let text = Templates.email(vmInfo, devices);
+    let devices = JSON.parse(devicesRes.replace('ssh success',''));
+    let text = Templates.email(vmInfo, devices, basic);
     let retval = sendgrid(email, text);
 
     socket.emit(config.newdata, retval);

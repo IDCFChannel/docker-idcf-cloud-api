@@ -13,12 +13,16 @@ const Templates = {
         let tpl = '{{name}} starts a deployment at {{time}}.\nplease wait a few minutes.\n';
         return Mustache.render(tpl, view);
     },
-    email: function(vmInfo, devices) {
+    email: function(vmInfo, devices, basic) {
         let dump = {
             server: {
                 hostname: vmInfo.name,
                 publicip: vmInfo.publicip,
-                sample_app: 'http://'+vmInfo.publicip+':3030'
+                user: 'root',
+                password: vmInfo.password,
+                manage_app: 'http://'+vmInfo.publicip+':3030',
+                manage_user: basic.user,
+                manage_password: basic.password
             },
             devices: devices
         };

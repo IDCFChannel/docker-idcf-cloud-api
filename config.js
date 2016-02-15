@@ -41,7 +41,8 @@ const config = {
     newdata: 'newdata',
     deployed: 'deployed',
     shellInstall: 'masterless.sh',
-    shellExecute: 'devices.sh'
+    shellBasic: 'basic.sh',
+    shellDevices: 'devices.sh'
 };
 
 module.exports = config;

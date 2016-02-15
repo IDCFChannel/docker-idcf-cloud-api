@@ -29,14 +29,22 @@ describe('Mustache templates', () => {
         token: '44'
     }];
 
+    let basic = {
+        user: 'user',
+        password: 'password'
+    };
     it('should render email body with devices', () => {
-        let emailBody = Templates.email(vmInfo, devices);
+        let emailBody = Templates.email(vmInfo, devices, basic);
         emailBody.should.equal(`# IDCFチャンネルのデバイス情報
 
 server:
   hostname: a
   publicip: 127.0.0.1
-  sample_app: 'http://127.0.0.1:3030'
+  user: root
+  password: b
+  manage_app: 'http://127.0.0.1:3030'
+  manage_user: user
+  manage_password: password
 devices:
   - keyword: a
     uuid: '11'
