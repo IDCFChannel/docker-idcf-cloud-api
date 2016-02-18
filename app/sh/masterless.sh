@@ -4,13 +4,14 @@ set -eo pipefail
 cp /etc/apt/sources.list{,.orig}
 sed -i".back" -e "s,//ftp.jp.debian.org,//ftp.us.debian.org,g" /etc/apt/sources.list
 
-mkdir -p /etc/salt/minion.d /srv
+apps_dir=/root/iot_apps
+mkdir -p /etc/salt/minion.d /srv $apps_dir
 
-echo -e "{\"ipaddress\":\""$1"\"}" > /root/host.json
+echo -e "{\"ipaddress\":\""$1"\"}" > /tmp/host.json
 
 apt-get update && apt-get install -y git
-git clone https://github.com/IDCFChannel/meshblu-salt.git
-mv meshblu-salt/srv/salt/config/salt /srv/
+git clone https://github.com/IDCFChannel/meshblu-salt.git $apps_dir/meshblu-salt
+mv $apps_dir/meshblu-salt/srv/salt/config/salt /srv/
 
 cat <<EOF > /etc/salt/minion.d/masterless.conf
 file_client: local

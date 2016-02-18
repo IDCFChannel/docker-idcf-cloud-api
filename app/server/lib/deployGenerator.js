@@ -21,8 +21,8 @@ module.exports = co.wrap(function* (socket, command, email, start,
 
     let basicRes = yield shell.execute(config.shellBasic,
                                      privateKey, vmInfo.publicip);
-    console.log(basicRes);
-    let basic = JSON.parse(basicRes);
+
+    let basic = JSON.parse(basicRes.replace('ssh success',''));
     let devicesRes = yield shell.execute(config.shellDevices,
                                      privateKey, vmInfo.publicip);
 
