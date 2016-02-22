@@ -16,17 +16,22 @@ const Templates = {
     email: function(vmInfo, devices, basic) {
         let dump = {
             server: {
-                hostname: vmInfo.name,
-                publicip: vmInfo.publicip,
-                user: 'root',
-                password: vmInfo.password,
-                manage_app: 'http://'+vmInfo.publicip+':3030',
-                manage_user: basic.user,
-                manage_password: basic.password
+                'ホスト名': vmInfo.name,
+                'IPアドレス': vmInfo.publicip,
+                'SSHユーザー': 'root',
+                'SSHパスワード': vmInfo.password,
+                '管理Webアプリ': 'http://'+vmInfo.publicip+':3030',
+                'Konashi.jsアプリ': 'http://jsdo.it/ma6ato/8336',
+                'Port': '3030',
+                'BASIC認証USER': basic.user,
+                'BASIC認証Password': basic.password
             },
             devices: devices
         };
-        let retval = '# IDCFチャンネルのデバイス情報\n\n';
+        let retval = ['IDCFチャンネルのデバイス情報',
+                      '\n',
+                      'WebアプリやサンプルのKonashi.jsアプリではBASIC認証を使います。',
+                      '\n'].join('\n');
         return retval + yaml.safeDump(dump);
     }
 };

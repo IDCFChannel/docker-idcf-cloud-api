@@ -40,7 +40,7 @@ export default class Vm {
         this.socket.on('deployed', (data) => {
             data = JSON.parse(data);
             m.startComputation();
-            self.messages().splice(0, 0,'hostname: '+data.name, 'password: '+data.password,
+            self.messages().splice(0, 0,'サーバー名: '+data.name, 'SSHパスワード: '+data.password,
                                'ssh root@'+data.publicip+' -o PreferredAuthentications=password');
             m.endComputation();
         });
