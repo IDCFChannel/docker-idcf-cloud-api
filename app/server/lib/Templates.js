@@ -21,7 +21,7 @@ const Templates = {
                 'SSHユーザー': 'root',
                 'SSHパスワード': vmInfo.password,
                 '管理Webアプリ': 'http://'+vmInfo.publicip+':3030',
-                'Konashi.jsアプリ': 'http://jsdo.it/ma6ato/8336',
+                'Konashi.jsアプリ': 'http://jsdo.it/idcfchannel/Ow9J',
                 'Port': '3030',
                 'BASIC認証USER': basic.user,
                 'BASIC認証Password': basic.password
